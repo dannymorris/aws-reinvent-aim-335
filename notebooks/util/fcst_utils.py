@@ -50,7 +50,7 @@ def load_exact_sol(fname, item_id, is_schema_perm=False):
 
 def get_or_create_role_arn():
     iam = boto3.client("iam")
-    role_name = "ForecastRoleDemo"
+    role_name = "AmazonForecastWorkshopRole"
     assume_role_policy_document = {
         "Version": "2012-10-17",
         "Statement": [
@@ -71,8 +71,9 @@ def get_or_create_role_arn():
         )
         role_arn = create_role_response["Role"]["Arn"]
     except iam.exceptions.EntityAlreadyExistsException:
-        print("The role " + role_name + "exists, ignore to create it")
-        role_arn = boto3.resource('iam').Role(role_name).arn
+        print("The role " + role_name + " exists, skipping creation.")
+        return boto3.resource('iam').Role(role_name).arn
+        
     policy_arn = "arn:aws:iam::aws:policy/AmazonForecastFullAccess"
     iam.attach_role_policy(
         RoleName = role_name,

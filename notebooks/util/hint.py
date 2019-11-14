@@ -1,5 +1,5 @@
 import ipywidgets as widgets
-from IPython.display import display, Markdown, Code, HTML
+from IPython.display import display, Markdown, Code, HTML, JSON
 
 def hint(section):
     if section in SECTION:

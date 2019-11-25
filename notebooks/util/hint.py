@@ -70,6 +70,9 @@ response = forecast.create_dataset_import_job(
 """,
 '3b':
 """
+algorithm_arn = f'{base_algorithm_arn}Deep_AR_Plus'
+predictor_name = f'{project}_Deep_AR_Pls'
+
 response = forecast.create_predictor(
     PredictorName = predictor_name,
     AlgorithmArn = algorithm_arn,
@@ -79,27 +82,34 @@ response = forecast.create_predictor(
     InputDataConfig = {'DatasetGroupArn': dataset_group_arn},
     FeaturizationConfig = {'ForecastFrequency': timeseries_frequency}
 )
+
+predictor_arn_deep_ar = response['PredictorArn']
 """,
 '5':
 """
-forecast_name = f'{project}_prophet'
+forecast_name = f'{project}_deep_ar'
 response = forecast.create_forecast(
     ForecastName=forecast_name,
-    PredictorArn=predictor_arn_prophet
+    PredictorArn=predictor_arn_deep_ar
 )
+forecast_arn_deep_ar = response['ForecastArn']
 """,
 '6':
 """
 response = forecast_query.query_forecast(
-    ForecastArn=forecast_arn_prophet,
+    ForecastArn=forecast_arn_deep_ar,
     Filters={"item_id":item_id}
 )
+plot_forecasts(response, actual)
+plt.title("DeepAR Forecast");
 """,
 '7':
 """
+name = f'{project}_forecast_export_deep_ar_plus'
+s3_path = f"{s3_data_path}/{name}"
 response = forecast.create_forecast_export_job(
     ForecastExportJobName=name,
-    ForecastArn=forecast_arn_prophet,
+    ForecastArn=forecast_arn_deep_ar,
     Destination={
         "S3Config" : {
             "Path": s3_path,
@@ -107,5 +117,7 @@ response = forecast.create_forecast_export_job(
         }
     }
 )
+
+forecast_export_arn_deep_ar = response['ForecastExportJobArn']
 """
 }

@@ -41,7 +41,7 @@ schema = {
             "AttributeType": "timestamp"
         },
         {
-            "AttributeName": "price", 
+            "AttributeName": "workingday", 
             "AttributeType": "float"
         }
     ]
